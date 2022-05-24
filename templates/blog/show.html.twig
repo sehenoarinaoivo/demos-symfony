@@ -1,0 +1,15 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello BlogController!{% endblock %}
+
+{% block body %}
+    <article>
+        <h2>{{ article.title() }}</h2>
+        <div class="metadata">Ecrit le {{ article.createdAt | date('d/m/Y') }} à {{ article.createdAt | date('H:i') }} dans la catégorie Politique</div>
+        <div class="content">
+            <img src="{{ article.image }}" alt="">
+            {{ article.content | raw }}
+        </div>
+    </article>
+    <p><span>Lorem, ipsum dolor sit amet consectetur adipisicing elit. Odio deleniti voluptates a fugiat quam reprehenderit aliquid maxime possimus, esse quae dolore ab ipsam incidunt magnam necessitatibus architecto officia cumque ad amet. A velit voluptates tenetur, vel at repellendus! Laborum labore facere tenetur iusto dolor obcaecati sunt quis adipisci dicta ad?</span><span>Esse ad eius cupiditate cumque recusandae error consequatur. Eum aspernatur architecto modi autem labore provident adipisci mollitia rem odio maiores, sapiente exercitationem consequuntur sed laboriosam consectetur distinctio! Deserunt at necessitatibus hic, libero, similique cupiditate obcaecati error minima consequuntur expedita assumenda amet sit vero et quis. Dolore mollitia repellendus dolorem veritatis.</span></p>
+{% endblock %}
