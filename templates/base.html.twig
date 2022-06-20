@@ -1,49 +1,67 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <title>{% block title %}Welcome!{% endblock %}</title>
-        {# Run `composer require symfony/webpack-encore-bundle`
-           and uncomment the following Encore helpers to start using Symfony UX #}
-        
-        <link rel="stylesheet" href="https://bootswatch.com/5/flatly/bootstrap.min.css">
-        {% block stylesheets %}
-            {#{{ encore_entry_link_tags('app') }}#}
-        {% endblock %}
+	<head>
+		<meta charset="UTF-8">
+		<title>
+			{% block title %}Welcome!
+			{% endblock %}
+		</title>
+		{# Run `composer require symfony/webpack-encore-bundle`
+																																																				           and uncomment the following Encore helpers to start using Symfony UX #}
 
-    </head>
-    <body>
-        
+		<link rel="stylesheet" href="https://bootswatch.com/5/flatly/bootstrap.min.css">
+		{% block stylesheets %}
+			{#{{ encore_entry_link_tags('app') }}#}
+		{% endblock %}
 
-        <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
-        <div class="container-fluid">
-            <a class="navbar-brand" href="{{ path('home') }}">SymbolBlog</a>
-            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="true" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-            </button>
+	</head>
+	<body>
 
-            <div class="navbar-collapse collapse show" id="navbarColor01" style="">
-            <ul class="navbar-nav me-auto">
-                <li class="nav-item">
-                <a class="nav-link active" href="{{ path('blog') }}">Article
-                    <span class="visually-hidden">(current)</span>
-                </a>
-                </li>
-                <li class="nav-item">
-                <a class="nav-link" href="{{ path('blog_create') }}">Créer un Article</a>
-                </li>
-            </ul>
-            </div>
-        </div>
-        </nav>
-        <div class="container">
-            
- 
-            {% block body %}{% endblock %}
-        </div>
 
-        {% block javascripts %}
-            {#{{ encore_entry_script_tags('app') }}#}
-        {% endblock %}
-    </body>
-</html>
+		<nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+			<div class="container-fluid">
+				<a class="navbar-brand" href="{{ path('home') }}">SymbolBlog</a>
+				<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="true" aria-label="Toggle navigation">
+					<span class="navbar-toggler-icon"></span>
+				</button>
+
+				<div class="navbar-collapse collapse show" id="navbarColor01" style="">
+					<ul class="navbar-nav me-auto">
+						<li class="nav-item">
+							<a class="nav-link active" href="{{ path('blog') }}">Article
+								<span class="visually-hidden">(current)</span>
+							</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" href="{{ path('blog_create') }}">Créer un Article</a>
+						</li>
+
+						{% if not app.user %}
+							<li class="nav-item">
+								<a href="{{ path('app_login')}}" class="nav-link">Connexion</a>
+							</li>
+						{% else %}
+							<li class="nav-item">
+								<a href="{{ path('security_logout')}}" class="nav-link">Deconnexion</a>
+							</li>
+						{% endif %}
+					</ul>
+
+					{% if app.user %}
+						<div class="nav-item" style="float:right; color: #777">
+							<a class="navbar-brand" href="{{ path('home') }}">Mr.
+								{{ app.user.username }}</a>
+						</div>
+					{% endif %}
+				</div>
+			</div>
+		</nav>
+		<div class="container"> {% block body %}{% endblock %}
+			</div>
+
+			{% block javascripts %}
+				{#{{ encore_entry_script_tags('app') }}#}
+			{% endblock %}
+		</body>
+	</html>
+</body></html></body></html>
