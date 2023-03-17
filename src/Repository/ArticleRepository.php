@@ -46,6 +46,42 @@ class ArticleRepository extends ServiceEntityRepository
             $this->_em->flush();
         }
     }
+    /**
+     * Return all article per page
+     * @return void
+     */
+    public function getPaginateArticle($page, $limit, $filters = null){
+        $query = $this->createQueryBuilder('a');
+
+        // On filtres les données
+        if($filters != null){
+            $query->Where('a.category IN(:cats)')
+                ->setParameter(':cats', array_values($filters));
+        }
+
+            $query->orderBy('a.createdAt')
+            ->setFirstResult(($page * $limit) - $limit)
+            ->setMaxResults($limit)
+            ;
+        return $query->getQuery()->getResult();
+    }
+
+    /**
+     * Returns number of  article
+     * @return void
+     */
+    public function getTotalArticle($filters = null){
+        $query = $this->createQueryBuilder('a')
+                      ->select('COUNT(a)');
+            //On filtre les données
+            if($filters != null){
+                $query->where('a.category IN(:cats)')
+                       ->setParameter(':cats', array_values($filters))
+                ;
+            }
+        
+        return $query->getQuery()->getSingleScalarResult();
+    }
 
 //    /**
 //     * @return Article[] Returns an array of Article objects

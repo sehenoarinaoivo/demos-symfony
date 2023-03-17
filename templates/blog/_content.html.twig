@@ -1,0 +1,60 @@
+<section class='articles'>
+		{% for article in articles %}
+			<article>
+				<h2>{{ article.title() }}</h2>
+				<div class="metadata">Ecrit le
+					{{ article.createdAt | date('d/m/Y') }}
+					à
+					{{ article.createdAt | date('H:i') }}
+					dans la catégorie
+					{{ article.category.title }}
+				</div>
+				<div class="content">
+					<img src="{{ article.image }}" alt="">
+					{{ article.content | raw }}
+					<a href="{{ path('blog_show', {'id': article.id}) }}" class="btn btn-primary">Lire la suite</a>
+					<a href="{{ path('like_article',{'id': article.id}) }}" class="btn btn-link js-like">
+						{% if app.user and article.isLikedByUser(app.user) %}
+							<i class="fas fa-thumbs-up"></i>
+						{% else %}
+							<i class="far fa-thumbs-up"></i>
+						{% endif %}
+						<span class="js-likes">{{ article.likes|length }}</span>
+						<span class="js-label">J'aime</span>
+					</a>
+				</div>
+			</article>
+		{% endfor %}
+	</section>
+
+    {% set queryParams = app.request.query.all %}
+    {% set queryString = queryParams|filter((v, k) => k != "page"  and k != "ajax")|url_encode %}
+
+    <ul class="pagination">
+        <li class=" {{(page == 1) ? 'disabled': '' }} ">
+            <a href="?page=1&{{queryString}}">
+                <i class="fas fa-step-backward"></i>
+            </a>
+        </li>
+        <li class=" {{ (page == 1) ? 'disabled': '' }} ">
+            <a href=" {{ (page>1)? '?page=' ~ (page - 1): '' }}&{{queryString}}">
+                <i class="fas fa-angle-left"></i>
+            </a>
+        </li>
+        {% set pages = (total / limit)|round(0, 'ceil') %}
+        {% for item in 1..pages %}
+            <li class="{{ (page == item) ? 'active': '' }} ">
+                <a href="?page={{item}}&{{queryString}} ">{{ item }} </a>
+            </li>
+        {% endfor %}
+        <li class="{{(page == pages) ? 'disabled': '' }}">
+            <a href="{{(page < pages) ? '?page' ~ (page + 1) : '' }}&{{queryString}}">
+                <i class="fas fa-angle-right"></i>
+            </a>
+        </li>
+        <li class="{{(page == pages) ? 'disabled': ''}}">
+            <a href="?page={{ pages }}&{{queryString}} ">
+                <i class="fas fa-step-forward"></i>
+            </a>
+        </li>
+    </ul>

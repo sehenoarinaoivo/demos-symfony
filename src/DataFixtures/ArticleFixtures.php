@@ -16,7 +16,7 @@ class ArticleFixtures extends Fixture
     {
         $faker = \Faker\Factory::create('fr_FR');
 
-        //Créer 3 catégories fakées
+      /*  //Créer 3 catégories fakées
         for($i = 1; $i <= 3; $i++) {
             $category = new Category();
             $category->setTitle($faker->sentence())
@@ -56,6 +56,6 @@ class ArticleFixtures extends Fixture
 
         }
 
-        $manager->flush();
+        $manager->flush(); */
     }
 }

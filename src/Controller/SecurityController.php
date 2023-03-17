@@ -37,7 +37,7 @@ class SecurityController extends AbstractController
                 'Votre compte a bien été créé ! Vous pouvez maintenant vous connecter'
             );
 
-            return $this->redirectToRoute("security_login");
+            return $this->redirectToRoute("security_registration");
         }
         return $this->render('security/registration.html.twig', [
             'form' => $form->createView()

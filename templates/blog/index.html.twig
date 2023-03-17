@@ -1,27 +1,63 @@
 {% extends 'base.html.twig' %}
 
+{# On crée des variables personnalisées #}
+{% set queryParams = app.request.query.all %}
+{% set queryString = queryParams|filter((v, k) => k != "page")|url_encode %}
+
 {% block title %}Hello BlogController!
 {% endblock %}
 
 {% block body %}
 
-	<section class='articles'>
-		{% for article in articles %}
-			<article>
-				<h2>{{ article.title() }}</h2>
-				<div class="metadata">Ecrit le
-					{{ article.createdAt | date('d/m/Y') }}
-					à
-					{{ article.createdAt | date('H:i') }}
-					dans la catégorie
-					{{ article.category.title }}
-				</div>
-				<div class="content">
-					<img src="{{ article.image }}" alt="">
-					{{ article.content | raw }}
-					<a href="{{ path('blog_show', {'id': article.id}) }}" class="btn btn-primary">Lire la suite</a>
-				</div>
-			</article>
-		{% endfor %}
+	{# {{ dump(queryParams) }}
+	{{ dump(queryString) }} #}
 
+	<div class="container">
+		<div class="grix sv1 sm5 gutter-0 card">
+			<div class="col-xs1">
+				<p>Filtrer</p>
+				<form action="" id="filters">
+					{% for categorie in categories %}
+					{# On vérifie si la catégorie est dans les paramètres #}
+						{% if queryParams is not empty and queryParams.category is not empty %}
+							{% set checked = (categorie.id in queryParams.category) ? "checked": "" %}
+						{% else %}
+							{% set checked = "" %}
+						{% endif %}
+						<p>
+							<input type="checkbox" name="category[]" id="cat{{categorie.id}}" value="{{categorie.id}}" {{checked}} >
+							<label for="cat{{categorie.id}} ">{{categorie.title}} </label>
+						</p>
+					{% endfor %}
+					<input type="hidden" name="page" value="{{page}}">
+				</form>
+			</div>
+			<div class="col-xs1 col-sm4" id="content">
+				{% include "blog/_content.html.twig" %}
+			</div>
+		</div>
+	  </div>
+	
+	{% endblock %}
+	{% block javascripts %}
+	{# <script src="{{ asset('js/filters.js') }}"></script> #}
+	<script src="{{ asset('js/filters.js') }}"></script>
+	{# <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+		<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+		<script>
+
+			function onClickBtnLike(event){
+				event.preventDefault();
+
+				const url = this.href;
+
+				axios.get().then(function(response){
+					console.log(response)
+				})
+			}
+
+			document.querySelectorAll('a.btn.btn-link.js-like').forEach(function(link){
+				link.addEventListener('click', onClickBtnLike);
+			})
+	</script> #}
 	{% endblock %}

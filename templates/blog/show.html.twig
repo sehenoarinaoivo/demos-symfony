@@ -20,10 +20,7 @@
 	</article>
 
 	<section id='commentaires'>
-		<h1>
-			{{ article.comments | length }}
-			commentaires
-		</h1>
+		<h1> {{ article.comments | length }} commentaires </h1>
 		{% for comment in article.comments %}
 			<div class="col-3">
 				<b>{{ comment.author }}</b>

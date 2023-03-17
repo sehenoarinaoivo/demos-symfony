@@ -7,6 +7,7 @@ use App\Entity\Comment;
 use App\Form\ArticleType;
 use App\Form\CommentType;
 use App\Repository\ArticleRepository;
+use App\Repository\CategoryRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -16,21 +17,54 @@ use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 
 class BlogController extends AbstractController
 {
     /**
-     * @Route("/", name="blog")
+     * @Route("/articles", name="blog")
      */
-    public function index(ArticleRepository $repo): Response
+    public function index(ArticleRepository $ArticleRepo,CategoryRepository $catRepo, Request $request): Response
     {
-        $articles = $repo->findAll();
+        //on définit le limite
+        $limit = 5;
+
+        //On récupère le numéro de la page
+        $page = (int)$request->query->get("page", 1);
+
+        // On récupère les filtres
+        $filters = $request->get("category");
+        // dd($filters);
+        //On récupère les annonces de la page en fonction du filtre
+        $articles = $ArticleRepo->getPaginateArticle($page, $limit, $filters);
+        
+        //Nombre total d'Article
+        $total = $ArticleRepo->getTotalArticle($filters);
+        
+        // On verifie si on a requete Ajax
+        if($request->get('ajax')){
+           
+            return new JsonResponse([
+                'content' =>  $this->renderView('blog/_content.html.twig',
+                compact('articles', 'total','limit', 'page'))
+            ]);
+        }
+
+        //On va chercher tous les catégories
+        $categories = $catRepo->findAll();
+
+        // $articles = $ArticleRepo->findAll();
         // $user = $this->getUser();
 
         return $this->render('blog/index.html.twig', [
             'controller_name' => 'BlogController',
             'articles' => $articles,
+            // 'articless' => $articless,
             // 'user' => $user
+            'page' => $page,
+            'limit' => $limit,
+            'total' => $total,
+            'categories' => $categories
         ]);
     }
 
